@@ -1,5 +1,7 @@
 using Data;
+using Dotnet_backend.Dtos;
 using Dotnet_backend.Mappers;
+using Dotnet_backend.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Controllers
@@ -33,6 +35,18 @@ namespace Controllers
                 return NotFound();
             }
             return Ok(stock.ToStockDto());
+        }
+
+        [HttpPost]
+        public IActionResult CreateStock([FromBody] CreateStockRequest stock)
+        {
+            var stockModel = stock.ToStockFromCreateDto();
+            _context.Stocks.Add(stockModel);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetStockById), new
+            {
+                id = stockModel.Id
+            },stockModel.ToStockDto());
         }
     }
 }

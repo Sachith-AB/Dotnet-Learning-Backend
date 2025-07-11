@@ -18,5 +18,17 @@ namespace Dotnet_backend.Mappers
                 MarketCap = stockModel.MarketCap,
             };
         }
+
+        public static Stock ToStockFromCreateDto(this CreateStockRequest stockModel) {
+            return new Stock
+            {
+                Symbol = stockModel.Symbol,
+                CompanyName = stockModel.CompanyName,
+                Purchase = stockModel.Purchase,
+                LastDiv = stockModel.LastDiv,
+                Industry = stockModel.Industry,
+                MarketCap = stockModel.MarketCap,
+            };
+        }
     }
 }
