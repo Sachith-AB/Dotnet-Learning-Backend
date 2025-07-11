@@ -57,7 +57,7 @@ namespace Controllers
 
             if (stock == null)
             {
-                return NotFound(new { message = "Stock not found given ID"});
+                return NotFound(new { message = "Stock not found given ID" });
             }
 
             stock.Purchase = stockRequest.Purchase;
@@ -68,6 +68,22 @@ namespace Controllers
             _context.SaveChanges();
 
             return Ok(stock.ToStockDto());
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteStock([FromRoute] int id)
+        {
+            var stock = _context.Stocks.FirstOrDefault(x => x.Id == id);
+
+            if (stock == null)
+            {
+                return NotFound(new { message = "Stock not found given ID" });
+            }
+
+            _context.Stocks.Remove(stock);
+            _context.SaveChanges();
+
+            return Ok(new { message = "deleted successfully" });
         }
     }
 }
