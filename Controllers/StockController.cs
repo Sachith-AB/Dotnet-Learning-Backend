@@ -1,5 +1,6 @@
 using Data;
 using Dotnet_backend.Dtos;
+using Dotnet_backend.Dtos.Stock;
 using Dotnet_backend.Mappers;
 using Dotnet_backend.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -46,7 +47,27 @@ namespace Controllers
             return CreatedAtAction(nameof(GetStockById), new
             {
                 id = stockModel.Id
-            },stockModel.ToStockDto());
+            }, stockModel.ToStockDto());
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateStock([FromBody] UpdateStockRequest stockRequest, [FromRoute] int id)
+        {
+            var stock = _context.Stocks.FirstOrDefault(x => x.Id == id);
+
+            if (stock == null)
+            {
+                return NotFound(new { message = "Stock not found given ID"});
+            }
+
+            stock.Purchase = stockRequest.Purchase;
+            stock.LastDiv = stockRequest.LastDiv;
+            stock.Industry = stockRequest.Industry;
+            stock.MarketCap = stockRequest.MarketCap;
+
+            _context.SaveChanges();
+
+            return Ok(stock.ToStockDto());
         }
     }
 }

@@ -1,4 +1,5 @@
 using Dotnet_backend.Dtos;
+using Dotnet_backend.Dtos.Stock;
 using Dotnet_backend.Models;
 
 namespace Dotnet_backend.Mappers
@@ -19,11 +20,23 @@ namespace Dotnet_backend.Mappers
             };
         }
 
-        public static Stock ToStockFromCreateDto(this CreateStockRequest stockModel) {
+        public static Stock ToStockFromCreateDto(this CreateStockRequest stockModel)
+        {
             return new Stock
             {
                 Symbol = stockModel.Symbol,
                 CompanyName = stockModel.CompanyName,
+                Purchase = stockModel.Purchase,
+                LastDiv = stockModel.LastDiv,
+                Industry = stockModel.Industry,
+                MarketCap = stockModel.MarketCap,
+            };
+        }
+
+        public static Stock ToStockUpdateDto(this UpdateStockRequest stockModel)
+        {
+            return new Stock
+            {
                 Purchase = stockModel.Purchase,
                 LastDiv = stockModel.LastDiv,
                 Industry = stockModel.Industry,
