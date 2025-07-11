@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Models
+namespace Dotnet_backend.Models
 {
     [Table("Comments")]
     public class Comment

@@ -1,5 +1,5 @@
+using Dotnet_backend.Models;
 using Microsoft.EntityFrameworkCore;
-using Models;
 
 namespace Data
 {
