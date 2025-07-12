@@ -23,7 +23,7 @@ namespace Dotnet_backend.Repositories
             return stock;
         }
 
-        public async Task<Stock?> deleteStock(int id)
+        public async Task<Stock?> DeleteStock(int id)
         {
             var stock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -52,7 +52,7 @@ namespace Dotnet_backend.Repositories
             }
             return stock;
         }
-        
+
         public async Task<Stock?> UpdateAsync(int id, UpdateStockRequest stockRequest)
         {
             var stock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);

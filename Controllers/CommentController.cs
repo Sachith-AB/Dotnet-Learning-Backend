@@ -34,7 +34,7 @@ namespace Dotnet_backend.Controllers
                 id = comment.Id
             }, comment.ToCommentDto());
         }
-        
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCommentById([FromRoute] int id)
         {
@@ -42,9 +42,22 @@ namespace Dotnet_backend.Controllers
 
             if (comment == null)
             {
-                return NotFound(new { message = "Not found comment given id"});
+                return NotFound(new { message = "Not found comment given id" });
             }
             return Ok(comment);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateComment([FromRoute] int id, [FromBody] UpdateCommentRequest updateCommentRequest)
+        {
+            var comment = await _commentRepository.UpdateAsync(id, updateCommentRequest);
+
+            if (comment == null)
+            {
+                return NotFound(new { message = "Not found comment given comment Id" });
+            }
+
+            return Ok(comment.ToCommentDto());
         }
     }
 }

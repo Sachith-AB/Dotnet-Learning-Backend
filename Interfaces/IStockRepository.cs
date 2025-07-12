@@ -11,6 +11,6 @@ namespace Dotnet_backend.Interfaces
 
         Task<Stock?> UpdateAsync(int id, UpdateStockRequest updateStockRequest);
 
-        Task<Stock?> deleteStock(int id);
+        Task<Stock?> DeleteStock(int id);
     }
 }

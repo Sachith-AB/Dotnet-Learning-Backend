@@ -35,7 +35,7 @@ namespace Dotnet_backend.Controllers
 
             if (stock == null)
             {
-                return NotFound(new { message = "Not found stock given id"});
+                return NotFound(new { message = "Not found stock given id" });
             }
             return Ok(stock.ToStockDto());
         }
@@ -60,14 +60,14 @@ namespace Dotnet_backend.Controllers
             {
                 NotFound(new { message = "Stock not found given id" });
             }
-            
+
             return Ok(stock.ToStockDto());
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStock([FromRoute] int id)
         {
-            var stock = await _stockRepository.deleteStock(id);
+            var stock = await _stockRepository.DeleteStock(id);
 
             if (stock == null)
             {
