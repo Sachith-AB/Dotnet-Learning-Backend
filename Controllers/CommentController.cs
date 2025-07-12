@@ -20,15 +20,19 @@ namespace Dotnet_backend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> createComment([FromBody] CreateCommentRequest createCommentRequest)
+        public async Task<IActionResult> CreateComment([FromBody] CreateCommentRequest createCommentRequest)
         {
             var comment = createCommentRequest.ToCommentFromCreateDto();
-            await _commentRepository.CreateAsync(comment);
+            var createdComment = await _commentRepository.CreateAsync(comment);
 
+            if (createdComment == null)
+            {
+                return BadRequest(new { message = "give stock id not invalid or not stock give ID" });
+            }
             return CreatedAtAction(nameof(GetCommentById), new
             {
                 id = comment.Id
-            }, comment);
+            }, comment.ToCommentDto());
         }
         
         [HttpGet("{id}")]
