@@ -11,12 +11,10 @@ namespace Dotnet_backend.Controllers
     public class CommentController : ControllerBase
     {
         private readonly ICommentRepository _commentRepository;
-        private readonly ApplicationDBContext _context;
 
         public CommentController(ICommentRepository commentRepository, ApplicationDBContext context)
         {
             _commentRepository = commentRepository;
-            _context = context;
         }
 
         [HttpPost]
@@ -35,18 +33,6 @@ namespace Dotnet_backend.Controllers
             }, comment.ToCommentDto());
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetCommentById([FromRoute] int id)
-        {
-            var comment = await _context.Comments.FindAsync(id);
-
-            if (comment == null)
-            {
-                return NotFound(new { message = "Not found comment given id" });
-            }
-            return Ok(comment);
-        }
-
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateComment([FromRoute] int id, [FromBody] UpdateCommentRequest updateCommentRequest)
         {
@@ -58,6 +44,41 @@ namespace Dotnet_backend.Controllers
             }
 
             return Ok(comment.ToCommentDto());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetCommentById([FromRoute] int id)
+        {
+            var comment = await _commentRepository.GetCommentById(id);
+
+            if (comment == null)
+            {
+                return NotFound(new { message = "Not comment to given Id" });
+            }
+
+            return Ok(comment.ToCommentDto());
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetComments()
+        {
+            var comments = await _commentRepository.GetComments();
+            var commentDtos = comments.Select(c => c.ToCommentDto());
+
+            return Ok(commentDtos);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteComment([FromRoute] int id)
+        {
+            var comment = await _commentRepository.DeleteComment(id);
+
+            if (comment == null)
+            {
+                return NotFound(new { message = "comment not fount given Id" });
+            }
+
+            return Ok(new {message = "comment deleted"});
         }
     }
 }

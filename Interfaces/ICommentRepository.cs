@@ -8,5 +8,11 @@ namespace Dotnet_backend.Interfaces
         Task<Comment?> CreateAsync(Comment comment);
 
         Task<Comment?> UpdateAsync(int id, UpdateCommentRequest updateCommentRequest);
+
+        Task<Comment?> GetCommentById(int id);
+
+        Task<List<Comment>> GetComments();
+
+        Task<object?> DeleteComment(int id);
     }
 }
