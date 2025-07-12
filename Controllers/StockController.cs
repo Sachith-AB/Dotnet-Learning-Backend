@@ -1,14 +1,12 @@
-using Data;
 using Dotnet_backend.Dtos;
 using Dotnet_backend.Dtos.Stock;
 using Dotnet_backend.Interfaces;
 using Dotnet_backend.Mappers;
-using Dotnet_backend.Models;
-using Dotnet_backend.Repositories;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace Controllers
+using Microsoft.AspNetCore.Mvc;
+
+
+namespace Dotnet_backend.Controllers
 {
     [Route("api/stock")]
     [ApiController]
