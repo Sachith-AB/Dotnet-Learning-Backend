@@ -1,6 +1,7 @@
 using Data;
 using Dotnet_backend.Dtos;
 using Dotnet_backend.Dtos.Stock;
+using Dotnet_backend.Interfaces;
 using Dotnet_backend.Mappers;
 using Dotnet_backend.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,15 +14,18 @@ namespace Controllers
     public class StockController : ControllerBase
     {
         private readonly ApplicationDBContext _context;
-        public StockController(ApplicationDBContext context)
+        private readonly IStockRepository _stockRepository;
+
+        public StockController(ApplicationDBContext context, IStockRepository stockRepository)
         {
             _context = context;
+            _stockRepository = stockRepository;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var stocks = await _context.Stocks.ToListAsync();
+            var stocks = await _stockRepository.GetAllStocksAsync();
             var StockDto = stocks.Select(s => s.ToStockDto());
 
             return Ok(StockDto);

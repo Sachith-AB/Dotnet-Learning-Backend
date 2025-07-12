@@ -1,4 +1,6 @@
 using Data;
+using Dotnet_backend.Interfaces;
+using Dotnet_backend.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
+
+builder.Services.AddScoped<IStockRepository, StockRepository>(); // Register StockRepository
 
 var app = builder.Build();
 
