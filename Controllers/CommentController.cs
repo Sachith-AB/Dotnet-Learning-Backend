@@ -78,7 +78,22 @@ namespace Dotnet_backend.Controllers
                 return NotFound(new { message = "comment not fount given Id" });
             }
 
-            return Ok(new {message = "comment deleted"});
+            return Ok(new { message = "comment deleted" });
+        }
+
+        [HttpGet("stock/{id}")]
+        public async Task<IActionResult> GetCommentsByStockId([FromRoute] int id)
+        {
+            var comments = await _commentRepository.GetCommentsByStockId(id);
+
+            if (comments == null)
+            {
+                return NotFound(new { message = "Not comments yet given Id" });
+            }
+            
+            var commentDtos = comments.Select(s => s.ToCommentDto());
+
+            return Ok(commentDtos);
         }
     }
 }

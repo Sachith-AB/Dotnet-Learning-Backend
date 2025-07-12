@@ -14,5 +14,7 @@ namespace Dotnet_backend.Interfaces
         Task<List<Comment>> GetComments();
 
         Task<object?> DeleteComment(int id);
+
+        Task<List<Comment>?> GetCommentsByStockId(int id);
     }
 }

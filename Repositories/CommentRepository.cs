@@ -54,6 +54,18 @@ namespace Dotnet_backend.Repositories
 
         }
 
+        public async Task<List<Comment>?> GetCommentsByStockId(int id)
+        {
+            var comments = await _context.Comments.Where(x => x.StockId == id).ToListAsync();
+
+            if (comments.Count == 0)
+            {
+                return null;
+            }
+
+            return comments;
+        }
+
         public async Task<Comment?> UpdateAsync(int id, UpdateCommentRequest updateCommentRequest)
         {
             var comment = await _context.Comments.FirstOrDefaultAsync(x => x.Id == id);
