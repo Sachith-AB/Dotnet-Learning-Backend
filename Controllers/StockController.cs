@@ -4,6 +4,7 @@ using Dotnet_backend.Dtos.Stock;
 using Dotnet_backend.Interfaces;
 using Dotnet_backend.Mappers;
 using Dotnet_backend.Models;
+using Dotnet_backend.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,12 +14,10 @@ namespace Controllers
     [ApiController]
     public class StockController : ControllerBase
     {
-        private readonly ApplicationDBContext _context;
         private readonly IStockRepository _stockRepository;
 
-        public StockController(ApplicationDBContext context, IStockRepository stockRepository)
+        public StockController(IStockRepository stockRepository)
         {
-            _context = context;
             _stockRepository = stockRepository;
         }
 
@@ -34,7 +33,7 @@ namespace Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStockById([FromRoute] int id)
         {
-            var stock = await _context.Stocks.FindAsync(id);
+            var stock = await _stockRepository.GetStockByIdAsync(id);
 
             if (stock == null)
             {
@@ -47,8 +46,7 @@ namespace Controllers
         public async Task<IActionResult> CreateStock([FromBody] CreateStockRequest stock)
         {
             var stockModel = stock.ToStockFromCreateDto();
-            await _context.Stocks.AddAsync(stockModel);
-            await _context.SaveChangesAsync();
+            await _stockRepository.CreateAsync(stockModel);
             return CreatedAtAction(nameof(GetStockById), new
             {
                 id = stockModel.Id
@@ -58,35 +56,25 @@ namespace Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStock([FromBody] UpdateStockRequest stockRequest, [FromRoute] int id)
         {
-            var stock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var stock = await _stockRepository.UpdateAsync(id, stockRequest);
 
             if (stock == null)
             {
-                return NotFound(new { message = "Stock not found given ID" });
+                NotFound(new { message = "Stock not found given id" });
             }
-
-            stock.Purchase = stockRequest.Purchase;
-            stock.LastDiv = stockRequest.LastDiv;
-            stock.Industry = stockRequest.Industry;
-            stock.MarketCap = stockRequest.MarketCap;
-
-            await _context.SaveChangesAsync();
-
+            
             return Ok(stock.ToStockDto());
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStock([FromRoute] int id)
         {
-            var stock = await _context.Stocks.FirstOrDefaultAsync(x => x.Id == id);
+            var stock = await _stockRepository.deleteStock(id);
 
             if (stock == null)
             {
                 return NotFound(new { message = "Stock not found given ID" });
             }
-
-            _context.Stocks.Remove(stock);
-            await _context.SaveChangesAsync();
 
             return Ok(new { message = "deleted successfully" });
         }

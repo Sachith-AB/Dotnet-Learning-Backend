@@ -6,9 +6,10 @@ namespace Dotnet_backend.Mappers
 {
     public static class StockMappers
     {
-        public static StockDto ToStockDto(this Stock stockModel)
+        public static StockDto? ToStockDto(this Stock? stockModel)
         {
-            return new StockDto
+            return stockModel == null ? null :
+            new StockDto
             {
                 Id = stockModel.Id,
                 Symbol = stockModel.Symbol,
