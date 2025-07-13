@@ -10,14 +10,9 @@ namespace Dotnet_backend.Controllers
 {
     [Route("api/stock")]
     [ApiController]
-    public class StockController : ControllerBase
+    public class StockController(IStockRepository stockRepository) : ControllerBase
     {
-        private readonly IStockRepository _stockRepository;
-
-        public StockController(IStockRepository stockRepository)
-        {
-            _stockRepository = stockRepository;
-        }
+        private readonly IStockRepository _stockRepository = stockRepository;
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -28,7 +23,7 @@ namespace Dotnet_backend.Controllers
             return Ok(StockDto);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetStockById([FromRoute] int id)
         {
             var stock = await _stockRepository.GetStockByIdAsync(id);
@@ -43,6 +38,10 @@ namespace Dotnet_backend.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStock([FromBody] CreateStockRequest stock)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var stockModel = stock.ToStockFromCreateDto();
             await _stockRepository.CreateAsync(stockModel);
             return CreatedAtAction(nameof(GetStockById), new
@@ -51,7 +50,7 @@ namespace Dotnet_backend.Controllers
             }, stockModel.ToStockDto());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateStock([FromBody] UpdateStockRequest stockRequest, [FromRoute] int id)
         {
             var stock = await _stockRepository.UpdateAsync(id, stockRequest);
@@ -64,7 +63,7 @@ namespace Dotnet_backend.Controllers
             return Ok(stock.ToStockDto());
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteStock([FromRoute] int id)
         {
             var stock = await _stockRepository.DeleteStock(id);

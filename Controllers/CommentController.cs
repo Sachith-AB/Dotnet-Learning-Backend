@@ -8,14 +8,9 @@ namespace Dotnet_backend.Controllers
 {
     [Route("api/comment")]
     [ApiController]
-    public class CommentController : ControllerBase
+    public class CommentController(ICommentRepository commentRepository) : ControllerBase
     {
-        private readonly ICommentRepository _commentRepository;
-
-        public CommentController(ICommentRepository commentRepository, ApplicationDBContext context)
-        {
-            _commentRepository = commentRepository;
-        }
+        private readonly ICommentRepository _commentRepository = commentRepository;
 
         [HttpPost]
         public async Task<IActionResult> CreateComment([FromBody] CreateCommentRequest createCommentRequest)
@@ -25,7 +20,7 @@ namespace Dotnet_backend.Controllers
 
             if (createdComment == null)
             {
-                return BadRequest(new { message = "give stock id not invalid or not stock give ID" });
+                return BadRequest(new { message = "given stock id not invalid or not stock give ID" });
             }
             return CreatedAtAction(nameof(GetCommentById), new
             {
@@ -33,7 +28,7 @@ namespace Dotnet_backend.Controllers
             }, comment.ToCommentDto());
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateComment([FromRoute] int id, [FromBody] UpdateCommentRequest updateCommentRequest)
         {
             var comment = await _commentRepository.UpdateAsync(id, updateCommentRequest);
@@ -46,7 +41,7 @@ namespace Dotnet_backend.Controllers
             return Ok(comment.ToCommentDto());
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetCommentById([FromRoute] int id)
         {
             var comment = await _commentRepository.GetCommentById(id);
@@ -68,7 +63,7 @@ namespace Dotnet_backend.Controllers
             return Ok(commentDtos);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteComment([FromRoute] int id)
         {
             var comment = await _commentRepository.DeleteComment(id);
@@ -81,7 +76,7 @@ namespace Dotnet_backend.Controllers
             return Ok(new { message = "comment deleted" });
         }
 
-        [HttpGet("stock/{id}")]
+        [HttpGet("stock/{id:int}")]
         public async Task<IActionResult> GetCommentsByStockId([FromRoute] int id)
         {
             var comments = await _commentRepository.GetCommentsByStockId(id);
