@@ -2,7 +2,6 @@ using Data;
 using Dotnet_backend.Dtos.Stock;
 using Dotnet_backend.Interfaces;
 using Dotnet_backend.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dotnet_backend.Repositories
@@ -39,12 +38,12 @@ namespace Dotnet_backend.Repositories
 
         public async Task<List<Stock>> GetAllStocksAsync()
         {
-            return await _context.Stocks.ToListAsync();
+            return await _context.Stocks.Include(c => c.Comments).ToListAsync();
         }
 
         public async Task<Stock?> GetStockByIdAsync(int id)
         {
-            var stock = await _context.Stocks.FindAsync(id);
+            var stock = await _context.Stocks.Include(c => c.Comments).FirstOrDefaultAsync(c => c.Id == id);
 
             if (stock == null)
             {
