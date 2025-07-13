@@ -19,7 +19,7 @@ namespace Dotnet_backend.Dtos
         [Required]
         public string Industry { get; set; } = string.Empty;
 
-        [Required]
+        [Range(1,10)]
         public long MarketCap { get; set; }
     }
 }
