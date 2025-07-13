@@ -51,6 +51,14 @@ namespace Dotnet_backend.Repositories
                 stocks = stocks.Where(s => s.Symbol.Contains(queryObject.Symbol));
             }
 
+            if (!string.IsNullOrWhiteSpace(queryObject.SortBy))
+            {
+                if (queryObject.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+                {
+                    stocks = queryObject.isDescending ? stocks.OrderByDescending(s => s.Symbol) : stocks.OrderBy(s => s.Symbol);
+                }
+            }
+
             return await stocks.ToListAsync();
         }
 
