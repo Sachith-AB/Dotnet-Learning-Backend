@@ -18,6 +18,7 @@ namespace Dotnet_backend.Mappers
                 LastDiv = stockModel.LastDiv,
                 Industry = stockModel.Industry,
                 MarketCap = stockModel.MarketCap,
+                comments = stockModel.Comments.Select(s => s.ToCommentDto()).ToList()!
             };
         }
 

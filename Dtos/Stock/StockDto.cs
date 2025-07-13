@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using Dotnet_backend.Dtos.Comment;
+using Dotnet_backend.Models;
 
 namespace Dotnet_backend.Dtos
 {
@@ -17,6 +19,8 @@ namespace Dotnet_backend.Dtos
         public string Industry { get; set; } = string.Empty;
 
         public long MarketCap { get; set; }
+
+        public List<CommentDto>? comments { get; set; }
     }
     
 }
