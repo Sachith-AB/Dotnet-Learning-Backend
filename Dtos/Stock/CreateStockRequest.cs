@@ -10,7 +10,7 @@ namespace Dotnet_backend.Dtos
         [Required]
         public string CompanyName { get; set; } = string.Empty;
 
-        [Required]
+        [Range(1,10)]
         public decimal Purchase { get; set; }
 
         [Required]
