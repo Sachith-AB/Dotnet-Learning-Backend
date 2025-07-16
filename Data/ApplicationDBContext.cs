@@ -1,4 +1,6 @@
+using Dotnet_backend.Migrations;
 using Dotnet_backend.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +13,7 @@ namespace Data
         {
         }
 
-        public DbSet<Stock> Stocks { get; set; }  // Changed to plural for convention
+        public DbSet<Stock> Stocks { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,7 +23,7 @@ namespace Data
             // Configure Stock entity
             modelBuilder.Entity<Stock>(entity =>
             {
-                entity.ToTable("Stocks");  // Explicit table name
+                entity.ToTable("Stocks");
 
                 entity.Property(s => s.Symbol)
                     .HasColumnType("varchar(10)")
@@ -69,6 +71,22 @@ namespace Data
                     .HasForeignKey(c => c.StockId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+
+            
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole
+                {
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole
+                {
+                    Name = "User",
+                    NormalizedName = "USER"
+                }
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
 
             // For MySQL 5.7+ compatibility (if needed)
             modelBuilder.HasCharSet("utf8mb4");  // Full Unicode support
