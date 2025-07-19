@@ -3,6 +3,7 @@ using Data;
 using Dotnet_backend.Interfaces;
 using Dotnet_backend.Models;
 using Dotnet_backend.Repositories;
+using Dotnet_backend.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -56,14 +57,15 @@ builder.Services.AddAuthentication(options =>
             ValidateAudience = true,
             ValidAudience = builder.Configuration["JWT:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigninKey"])
+                System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])
             )
         };
     }
 );
 
-builder.Services.AddScoped<IStockRepository, StockRepository>(); // Register StockRepository
+builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 var app = builder.Build();
 
