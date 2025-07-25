@@ -1,6 +1,7 @@
 using Data;
 using Dotnet_backend.Interfaces;
 using Dotnet_backend.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace Dotnet_backend.Repositories
@@ -14,6 +15,20 @@ namespace Dotnet_backend.Repositories
             await _context.Portfolio.AddAsync(portfolio);
             await _context.SaveChangesAsync();
             return portfolio;
+        }
+
+        public async Task<Portfolio> DeletePortfolio(AppUser appUser, string symbol)
+        {
+            var portfolioModel = await _context.Portfolio.FirstOrDefaultAsync(x => x.AppUserId == appUser.Id && x.Stock.Symbol.ToLower() == symbol.ToLower());
+
+            if (portfolioModel == null)
+            {
+                return null;
+            }
+
+            _context.Portfolio.Remove(portfolioModel);
+            await _context.SaveChangesAsync();
+            return portfolioModel;
         }
 
         public async Task<List<Stock>> GetUserPortfolio(AppUser user)

@@ -7,7 +7,7 @@ namespace Dotnet_backend.Interfaces
     public interface IStockRepository
     {
         Task<List<Stock>> GetAllStocksAsync(QueryObject queryObject);
-        
+
         Task<Stock?> GetStockByIdAsync(int id);
 
         Task<Stock?> GetStockBySymbolAsync(string symbol);

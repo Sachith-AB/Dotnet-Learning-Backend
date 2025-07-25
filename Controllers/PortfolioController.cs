@@ -58,5 +58,27 @@ namespace Dotnet_backend.Controllers
                 return Created();
             }
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeletePortfolio(string symbol)
+        {
+            var userName = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(userName);
+
+            var userPortfolio = await _portfolioRepository.GetUserPortfolio(appUser);
+
+            var filteredStock = userPortfolio.Where(s => s.Symbol.ToLower() == symbol.ToLower()).ToList();
+
+            if (filteredStock.Count() == 1)
+            {
+                await _portfolioRepository.DeletePortfolio(appUser, symbol);
+            }
+            else
+            {
+                return BadRequest("Stock not found");
+            }
+
+            return Ok();
+        }
     }
 }

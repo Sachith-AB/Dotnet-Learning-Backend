@@ -11,5 +11,7 @@ namespace Dotnet_backend.Interfaces
         Task<List<Stock>> GetUserPortfolio(AppUser user);
 
         Task<Portfolio> CreatePortfolio(Portfolio portfolio);
+
+        Task<Portfolio> DeletePortfolio(AppUser appUser, string symbol);
     }
 }
