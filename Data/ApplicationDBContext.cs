@@ -15,6 +15,7 @@ namespace Data
 
         public DbSet<Stock> Stocks { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Portfolio> Portfolio { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -72,7 +73,23 @@ namespace Data
                     .OnDelete(DeleteBehavior.Cascade);
             });
 
-            
+            modelBuilder.Entity<Portfolio>(x => x.HasKey(p => new
+            {
+                p.AppUserId,
+                p.StockId,
+            }));
+
+            modelBuilder.Entity<Portfolio>()
+                .HasOne(u => u.AppUser)
+                .WithMany(u => u.Portfolios)
+                .HasForeignKey(p => p.AppUserId);
+
+            modelBuilder.Entity<Portfolio>()
+                .HasOne(u => u.Stock)
+                .WithMany(u => u.Portfolios)
+                .HasForeignKey(p => p.StockId);
+
+
             List<IdentityRole> roles = new List<IdentityRole>
             {
                 new IdentityRole
