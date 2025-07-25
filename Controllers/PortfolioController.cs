@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dotnet_backend.Controllers
 {
+    [Route("/api/portfolio")]
     public class PortfolioController(UserManager<AppUser> userManager, IStockRepository stockRepository, IPortfolioRepository portfolioRepository) : ControllerBase
     {
         private readonly UserManager<AppUser> _userManager = userManager;
@@ -19,6 +20,43 @@ namespace Dotnet_backend.Controllers
             var appUser = await _userManager.FindByNameAsync(userName);
             var userPortfolio = await _portfolioRepository.GetUserPortfolio(appUser);
             return Ok(userPortfolio);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreatePortfolio(string symbol)
+        {
+            var userName = User.GetUserName();
+            var appUser = await _userManager.FindByNameAsync(userName);
+            var stock = await _stockRepository.GetStockBySymbolAsync(symbol);
+
+            if (stock == null)
+            {
+                return NotFound("Stock not found");
+            }
+
+            var userPortfolio = await _portfolioRepository.GetUserPortfolio(appUser);
+
+            if (userPortfolio.Any(e => e.Symbol.ToLower() == symbol.ToLower()))
+            {
+                return BadRequest("Can not add same stock or portfolio");
+            }
+
+            var portfolioModel = new Portfolio
+            {
+                StockId = stock.Id,
+                AppUserId = appUser.Id
+            };
+
+            await _portfolioRepository.CreatePortfolio(portfolioModel);
+
+            if (portfolioModel == null)
+            {
+                return StatusCode(500, "Could not create");
+            }
+            else
+            {
+                return Created();
+            }
         }
     }
 }
